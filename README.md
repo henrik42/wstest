@@ -1,36 +1,15 @@
 # wstest
 
-FIXME: description
+## Building
 
-## Installation
+    lein make-jumpstart
+    cp target/wstest-0.1.0-SNAPSHOT.jar ./jumpstart.jar
+    lein make-module
 
-Download from http://example.com/FIXME.
+## Running
 
-## Usage
+    java -jar lib/jetty-runner-9.4.9.v20180320.jar \
+      --jar jumpstart.jar \
+      --jar target/wstest-0.1.0-SNAPSHOT-standalone.jar
+      <war-file>
 
-FIXME: explanation
-
-    $ java -jar wstest-0.1.0-standalone.jar [args]
-
-## Options
-
-FIXME: listing of options this app accepts.
-
-## Examples
-
-...
-
-### Bugs
-
-...
-
-### Any Other Sections
-### That You Think
-### Might be Useful
-
-## License
-
-Copyright © 2018 FIXME
-
-Distributed under the Eclipse Public License either version 1.0 or (at
-your option) any later version.

@@ -5,9 +5,6 @@
 
   ;; build: lein uberjar
   ;; run: java -jar target/wstest-0.1.0-SNAPSHOT-standalone.jar url <url>
-  :main wstest.core
-  :aot [wstest.core]
-  
   :dependencies [[org.clojure/clojure "1.8.0"]
                  [org.apache.httpcomponents/httpclient "4.5.5"]
                  #_ [swank-clojure/swank-clojure "1.4.3"]
@@ -23,9 +20,8 @@
             ;; below) to jump-start the nREPL server. Otherwise you're
             ;; not able to do anything with your code.
             ;;
-            ;; Note: httpclient pulls in the following:
+            ;; Note: httpclient and nREPL pulls in the following:
             ;;
-            ;; META-INF/maven/org.apache.httpcomponents/httpclient/pom.xml
             ;; META-INF/maven/org.apache.httpcomponents/httpcore/pom.xml
             ;; META-INF/maven/commons-logging/commons-logging/pom.xml
             ;; META-INF/maven/commons-codec/commons-codec/pom.xml
@@ -40,13 +36,26 @@
             ;; META-INF/maven/org.clojure/clojure/pom.xml
             ;; META-INF/maven/org.apache.httpcomponents/httpclient/pom.xml
             ;; META-INF/maven/org.apache.httpcomponents/httpcore/pom.xml
-            "make-module" ["with-profile" "+make-module" "uberjar"]}
+            ;; META-INF/maven/org.clojure/tools.nrepl/pom.xml
+            "make-module" ["with-profile" "+make-module" "uberjar"]
+
+            "make-jumpstart" ["with-profile" "+make-jumpstart" "do" ["clean"] "jar"]}
   
-  :profiles {:make-module {:exclusions [[commons-logging]
+  :profiles {:provided {:dependencies [[ring/ring-jetty-adapter "1.6.3"]]}
+             
+             :make-module {:dependencies [[org.clojure/tools.nrepl "0.2.12"
+                                           :exclusions [[commons-logging]
+                                                        [commons-codec]]]]
+                           :exclusions [[commons-logging]
                                         [commons-codec]]}
              
-             :make-standalone {:dependencies [[swank-clojure/swank-clojure "1.4.3"]
-                                              [org.clojure/tools.nrepl "0.2.12"]]}})
+             :make-standalone {:main wstest.core
+                               :aot [wstest.core]
+                               :dependencies [[swank-clojure/swank-clojure "1.4.3"]
+                                              [org.clojure/tools.nrepl "0.2.12"]]}
 
+             :make-jumpstart {:resource-paths ^:replace ["jumpstart/resources"]
+                              :aot [wstest.jumpstart.servlet_container_initializer]
+                              :source-paths ^:replace ["jumpstart/src"]}})
 
 
