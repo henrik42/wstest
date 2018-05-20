@@ -1,4 +1,5 @@
-(ns wstest.core)
+(ns wstest.core
+  (:gen-class))
 
 (defn log [& xs]
   (.println System/out (apply str xs)))
@@ -38,4 +39,6 @@
   (condp = client
     "url" (http-get-url url)
     "apache" (http-get-httpclient url)
-    (log "Unknown client '" client "'")))
+    (do
+      (log "Unknown client '" client "'")
+      (System/exit 1))))
